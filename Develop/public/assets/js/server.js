@@ -2,8 +2,10 @@ const express = require('express');
 const path = require('path');
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static('public'));
 
 app.get('/index', (req, res) => 
@@ -11,13 +13,13 @@ app.get('/index', (req, res) =>
     );
     // link to index
 
-    app.get('/notes', (req, res) =>
-  res.sendFile(path.join(__dirname, 'public/notes.html'))
+    app.get('/apl/notes', (req, res) =>
+  res.sendFile(path.join(__dirname, 'db/db.json'))
 );
     // link to notes
 
 
-app.post('/api/reviews', (req, res) => {
+app.post('/api/notes', (req, res) => {
     // Let the client know that their POST request was received
     res.json(`${req.method} request received`);
   
@@ -28,6 +30,14 @@ app.post('/api/reviews', (req, res) => {
     console.info(`${req.method} request received`);
   });
   
+
+  app.delete('/api/notes/:id',(req, res) => {
+
+  });
+
+
   app.listen(PORT, () =>
     console.log(`Express server listening on port ${PORT}!`)
   );
+
+  // node server.js
