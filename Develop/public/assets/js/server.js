@@ -34,10 +34,13 @@ app.post('/api/notes', (req, res) => {
   app.delete('/api/notes/:id',(req, res) => {
 
   });
+// * is the default path, even if others fail
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/index.html'));
+});
 
-
-  app.listen(PORT, () =>
-    console.log(`Express server listening on port ${PORT}!`)
-  );
+app.listen(PORT, () => {
+    console.log(`Server up & running @ http://localhost:${PORT}`);
+});
 
   // node server.js
