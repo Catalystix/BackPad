@@ -1,24 +1,24 @@
 const router = require('express').Router();
 const { readFromFile, readAndAppend, writeToFile } = require('./helperutil');
-const { v4: uuidv4 } = require('./uuid');
+const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 
 // JSON the data
 router.get('/', (req, res) => {
-    readFromFile('./dev/db/db.json').then((data) => res.json(JSON.parse(data)));
+    readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
 });
 
-// POST route for new notes
+// POST route for notes
 router.post('/', (req, res) => {
     const { title, text } = req.body;
     if (req.body) {
         const newNote = {
             title,
             text,
-            note_id: uuidv4(),
+            id: uuidv4(),
         };
 
-        readAndAppend(newNote, './dev/db/db.json');
+        readAndAppend(newNote, './db/db.json');
         res.json('Note added');
     } else {
         res.error('Error in adding');
@@ -28,14 +28,14 @@ router.post('/', (req, res) => {
 
 
 // /api/notes/:id receives a query parameter containing the id of a note to delete. 
-// UUID has assigned them a unique id, so this finds that id and splices the note, then rewrites the db.json. 
+// UUID has assigned them a unique id, so this finds that id and splices the note, then rewrites
 router.delete('/:id', (req, res) => {
     const {id} = req.params
-    const note = JSON.parse(fs.readFileSync("./dev/db/db.json", "utf8"));
+    const note = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
 
-    const index = note.findIndex((note) => note.note_id === id);
+    const index = note.findIndex((note) => note.id === id);
     note.splice(index, 1);
-    writeToFile("./dev/db/db.json", note);
+    writeToFile("./db/db.json", note);
   
     return res.send();
   });
